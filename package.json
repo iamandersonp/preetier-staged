@@ -1,6 +1,6 @@
 {
   "name": "preetier-staged",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "src/index.js",
   "bin": {
     "prettier-staged": "src/index.js"
@@ -15,7 +15,7 @@
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
-    "prepare": "npm run setup:git-hooks"
+    "postinstall": "npm run setup:git-hooks"
   },
   "keywords": [
     "prettier",
@@ -23,14 +23,20 @@
     "git",
     "hooks"
   ],
-  "author": "",
+  "author": "Anderson Peñaloza <info@iamanderson.dev>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamandersonp/preetier-staged.git"
+  },
   "license": "GPL-3.0-only",
-  "description": "",
+  "description": "An utility to auto format staged files using Prettier",
+  "dependencies": {
+    "prettier": "^3.8.1"
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "jest": "^30.3.0",
-    "prettier": "^3.8.1",
     "standard-version": "^9.5.0"
   }
 }
