@@ -8,6 +8,8 @@ fi
 
 find src -name .DS_Store -exec rm {} \;
 
+npm run test:coverage
+
 prettier-staged
 
 STAGED_FILES=$(git diff --name-only --cached --diff-filter=ACM | grep -E '\.(html|ts|scss|css|json)$')
