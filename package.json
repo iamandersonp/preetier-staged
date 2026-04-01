@@ -1,6 +1,6 @@
 {
   "name": "preetier-staged",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "src/index.js",
   "bin": {
     "prettier-staged": "src/index.js"
@@ -23,7 +23,7 @@
     "git",
     "hooks"
   ],
-  "author": "Anderson Peñaloza <info@iamanderson.dev>",
+  "author": "Anderson Penaloza <info@iamanderson.dev>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iamandersonp/preetier-staged.git"
