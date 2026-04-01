@@ -23,7 +23,11 @@
     "git",
     "hooks"
   ],
-  "author": "",
+  "author": "Anderson Peñaloza <info@iamanderson.dev>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamandersonp/preetier-staged.git"
+  },
   "license": "GPL-3.0-only",
   "description": "",
   "devDependencies": {
