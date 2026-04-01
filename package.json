@@ -26,7 +26,7 @@
   "author": "Anderson Peñaloza <info@iamanderson.dev>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iamandersonp/preetier-staged.git"
+    "url": "git+https://github.com/iamandersonp/preetier-staged.git"
   },
   "license": "GPL-3.0-only",
   "description": "An utility to auto format staged files using Prettier",
