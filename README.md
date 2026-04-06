@@ -62,7 +62,6 @@ If no `.env` file exists, the default directory `.git-hooks` will be used.
 
 - A `{HOOKS_DIR}/pre-commit` file that:
   - Skips formatting during merge conflicts
-  - Runs tests (if configured)
   - Formats staged files with Prettier
   - Re-stages formatted files automatically
 
@@ -73,7 +72,9 @@ After installation, run this command in your project root to use the copied hook
 ```bash
 # Using default .git-hooks directory
 git config core.hooksPath .git-hooks
+```
 
+```bash
 # Or if you customized HOOKS_DIR in .env:
 git config core.hooksPath your-custom-directory
 ```
