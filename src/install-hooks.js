@@ -3,6 +3,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+// Constante para el directorio de hooks
+const HOOKS_DIR = '.git-hooks';
+
 /**
  * Detects if the package is being installed as a dependency in another project
  * vs being installed during local development
@@ -25,18 +28,18 @@ function getTargetProjectDir() {
 }
 
 /**
- * Copies the pre-commit hook to the target project's git-hooks directory
+ * Copies the pre-commit hook to the target project's .git-hooks directory
  * if it doesn't already exist
  */
 function copyPreCommitHook() {
   try {
     const targetProjectDir = getTargetProjectDir();
-    const targetHooksDir = path.join(targetProjectDir, 'git-hooks');
+    const targetHooksDir = path.join(targetProjectDir, HOOKS_DIR);
     const targetPreCommitPath = path.join(targetHooksDir, 'pre-commit');
 
     // Check if pre-commit already exists
     if (fs.existsSync(targetPreCommitPath)) {
-      console.log('✅ git-hooks/pre-commit already exists, skipping copy');
+      console.log(`✅ ${HOOKS_DIR}/pre-commit already exists, skipping copy`);
       return;
     }
 
@@ -51,7 +54,7 @@ function copyPreCommitHook() {
     // Ensure target directory exists
     if (!fs.existsSync(targetHooksDir)) {
       fs.mkdirSync(targetHooksDir, { recursive: true });
-      console.log('📁 Created git-hooks directory');
+      console.log(`📁 Created ${HOOKS_DIR} directory`);
     }
 
     // Copy the file
@@ -60,8 +63,8 @@ function copyPreCommitHook() {
     // Make it executable
     fs.chmodSync(targetPreCommitPath, 0o755);
 
-    console.log('✅ Copied pre-commit hook to git-hooks/pre-commit');
-    console.log('💡 To use it, run: git config core.hooksPath git-hooks');
+    console.log(`✅ Copied pre-commit hook to ${HOOKS_DIR}/pre-commit`);
+    console.log(`💡 To use it, run: git config core.hooksPath ${HOOKS_DIR}`);
   } catch (error) {
     // Don't fail installation if hook copy fails
     console.warn('⚠️ Failed to copy pre-commit hook:', error.message);
@@ -77,11 +80,11 @@ function setupLibraryGitHooks() {
 
   try {
     // Configure git to use .git-hooks directory
-    execSync('git config core.hooksPath .git-hooks', { stdio: 'ignore' });
-    console.log('✅ Configured git to use .git-hooks directory');
+    execSync(`git config core.hooksPath ${HOOKS_DIR}`, { stdio: 'ignore' });
+    console.log(`✅ Configured git to use ${HOOKS_DIR} directory`);
 
     // Make hooks executable
-    execSync('chmod +x ./.git-hooks/*', { stdio: 'ignore' });
+    execSync(`chmod +x ./${HOOKS_DIR}/*`, { stdio: 'ignore' });
     console.log('✅ Made git hooks executable');
   } catch (error) {
     // Silently fail if not in a git repository or permissions issue
@@ -115,7 +118,8 @@ module.exports = {
   getTargetProjectDir,
   copyPreCommitHook,
   setupLibraryGitHooks,
-  installHooks
+  installHooks,
+  HOOKS_DIR
 };
 
 // Run if called directly

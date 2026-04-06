@@ -11,7 +11,8 @@ const {
   getTargetProjectDir,
   copyPreCommitHook,
   setupLibraryGitHooks,
-  installHooks
+  installHooks,
+  HOOKS_DIR
 } = require('../src/install-hooks.js');
 
 describe('install-hooks', () => {
@@ -77,7 +78,7 @@ describe('install-hooks', () => {
 
   describe('copyPreCommitHook', () => {
     const targetDir = '/target/project';
-    const targetHooksDir = path.join(targetDir, 'git-hooks');
+    const targetHooksDir = path.join(targetDir, HOOKS_DIR);
     const targetPreCommit = path.join(targetHooksDir, 'pre-commit');
 
     beforeEach(() => {
@@ -91,7 +92,7 @@ describe('install-hooks', () => {
 
       expect(fs.copyFileSync).not.toHaveBeenCalled();
       expect(consoleSpy).toHaveBeenCalledWith(
-        '✅ git-hooks/pre-commit already exists, skipping copy'
+        `✅ ${HOOKS_DIR}/pre-commit already exists, skipping copy`
       );
     });
 
@@ -122,10 +123,12 @@ describe('install-hooks', () => {
       expect(fs.mkdirSync).toHaveBeenCalledWith(targetHooksDir, { recursive: true });
       expect(fs.copyFileSync).toHaveBeenCalled();
       expect(fs.chmodSync).toHaveBeenCalledWith(targetPreCommit, 0o755);
-      expect(consoleSpy).toHaveBeenCalledWith('📁 Created git-hooks directory');
-      expect(consoleSpy).toHaveBeenCalledWith('✅ Copied pre-commit hook to git-hooks/pre-commit');
+      expect(consoleSpy).toHaveBeenCalledWith(`📁 Created ${HOOKS_DIR} directory`);
       expect(consoleSpy).toHaveBeenCalledWith(
-        '💡 To use it, run: git config core.hooksPath git-hooks'
+        `✅ Copied pre-commit hook to ${HOOKS_DIR}/pre-commit`
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        `💡 To use it, run: git config core.hooksPath ${HOOKS_DIR}`
       );
     });
 
@@ -154,11 +157,11 @@ describe('install-hooks', () => {
 
       setupLibraryGitHooks();
 
-      expect(execSync).toHaveBeenCalledWith('git config core.hooksPath .git-hooks', {
+      expect(execSync).toHaveBeenCalledWith(`git config core.hooksPath ${HOOKS_DIR}`, {
         stdio: 'ignore'
       });
-      expect(execSync).toHaveBeenCalledWith('chmod +x ./.git-hooks/*', { stdio: 'ignore' });
-      expect(consoleSpy).toHaveBeenCalledWith('✅ Configured git to use .git-hooks directory');
+      expect(execSync).toHaveBeenCalledWith(`chmod +x ./${HOOKS_DIR}/*`, { stdio: 'ignore' });
+      expect(consoleSpy).toHaveBeenCalledWith(`✅ Configured git to use ${HOOKS_DIR} directory`);
       expect(consoleSpy).toHaveBeenCalledWith('✅ Made git hooks executable');
     });
 
