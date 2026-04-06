@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/iamandersonp/preetier-staged/compare/v0.0.7...v0.1.0) (2026-04-06)
+
+
+### Features
+
+* :sparkles: add installation hook to copy sample pre-commit hook ([8fd317d](https://github.com/iamandersonp/preetier-staged/commits/8fd317d17b122cd6067c86e2ce7f187e89deaf38))
+
 ### [0.0.5](https://github.com/iamandersonp/preetier-staged/compare/v0.0.4...v0.0.5) (2026-04-01)
 
 ### [0.0.4](https://github.com/iamandersonp/preetier-staged/compare/v0.0.3...v0.0.4) (2026-04-01)
