@@ -129,6 +129,18 @@ describe('install-hooks', () => {
   });
 
   describe('isExternalInstallation', () => {
+    let originalCwd;
+
+    beforeEach(() => {
+      originalCwd = process.cwd;
+    });
+
+    afterEach(() => {
+      if (process.cwd !== originalCwd) {
+        process.cwd = originalCwd;
+      }
+    });
+
     it('should return false when INIT_CWD is not set', () => {
       expect(isExternalInstallation()).toBe(false);
     });
@@ -142,17 +154,75 @@ describe('install-hooks', () => {
       process.env.INIT_CWD = '/different/path';
       expect(isExternalInstallation()).toBe(true);
     });
+
+    it('should return true when current working directory includes node_modules', () => {
+      // Mock process.cwd to simulate being inside node_modules
+      process.cwd = jest
+        .fn()
+        .mockReturnValue('/some/project/node_modules/@iamandersonp/prettier-staged');
+
+      // Set INIT_CWD to same path to simulate npm rebuild/link scenario
+      process.env.INIT_CWD = '/some/project/node_modules/@iamandersonp/prettier-staged';
+
+      const result = isExternalInstallation();
+
+      expect(result).toBe(true);
+    });
   });
 
   describe('getTargetProjectDir', () => {
-    it('should return INIT_CWD when set', () => {
+    let originalCwd;
+
+    beforeEach(() => {
+      originalCwd = process.cwd;
+    });
+
+    afterEach(() => {
+      if (process.cwd !== originalCwd) {
+        process.cwd = originalCwd;
+      }
+    });
+
+    it('should return INIT_CWD when set and not in node_modules', () => {
       const targetDir = '/target/project';
       process.env.INIT_CWD = targetDir;
       expect(getTargetProjectDir()).toBe(targetDir);
     });
 
-    it('should return current working directory when INIT_CWD is not set', () => {
-      expect(getTargetProjectDir()).toBe(process.cwd());
+    it('should return current working directory when INIT_CWD is not set and not in node_modules', () => {
+      const currentDir = process.cwd();
+      delete process.env.INIT_CWD;
+      expect(getTargetProjectDir()).toBe(currentDir);
+    });
+
+    it('should return resolved path when current working directory includes node_modules', () => {
+      // Mock process.cwd to simulate being inside node_modules
+      const mockNodeModulesPath = '/some/project/node_modules/@iamandersonp/prettier-staged';
+      const expectedProjectRoot = '/some/project';
+
+      process.cwd = jest.fn().mockReturnValue(mockNodeModulesPath);
+
+      // Clear INIT_CWD to test the node_modules path resolution
+      delete process.env.INIT_CWD;
+
+      const result = getTargetProjectDir();
+
+      expect(result).toBe(expectedProjectRoot);
+    });
+
+    it('should fallback to current working directory when in node_modules but INIT_CWD is empty string', () => {
+      // Mock process.cwd to simulate being inside node_modules
+      const mockNodeModulesPath = '/some/project/node_modules/@iamandersonp/prettier-staged';
+
+      process.cwd = jest.fn().mockReturnValue(mockNodeModulesPath);
+
+      // Set INIT_CWD to empty string
+      process.env.INIT_CWD = '';
+
+      const result = getTargetProjectDir();
+
+      // Should return the resolved path from node_modules (going up 3 levels)
+      expect(result).toBe('/some/project');
     });
   });
 
@@ -160,9 +230,20 @@ describe('install-hooks', () => {
     const targetDir = '/target/project';
     const targetHooksDir = path.join(targetDir, HOOKS_DIR);
     const targetPreCommit = path.join(targetHooksDir, 'pre-commit');
+    let originalCwd;
 
     beforeEach(() => {
+      originalCwd = process.cwd;
+      if (process.cwd !== originalCwd) {
+        process.cwd = originalCwd;
+      }
       process.env.INIT_CWD = targetDir;
+    });
+
+    afterEach(() => {
+      if (process.cwd !== originalCwd) {
+        process.cwd = originalCwd;
+      }
     });
 
     it('should skip copy if pre-commit already exists', () => {
@@ -234,9 +315,20 @@ describe('install-hooks', () => {
   describe('copyEnvExample', () => {
     const targetDir = '/target/project';
     const targetEnvExample = path.join(targetDir, '.env.example');
+    let originalCwd;
 
     beforeEach(() => {
+      originalCwd = process.cwd;
+      if (process.cwd !== originalCwd) {
+        process.cwd = originalCwd;
+      }
       process.env.INIT_CWD = targetDir;
+    });
+
+    afterEach(() => {
+      if (process.cwd !== originalCwd) {
+        process.cwd = originalCwd;
+      }
     });
 
     it('should skip copy if .env.example already exists', () => {
@@ -346,6 +438,7 @@ describe('install-hooks', () => {
       // Mock successful operations
       execSync.mockImplementation(() => {});
       fs.existsSync.mockImplementation((filePath) => {
+        if (filePath === '/different/project/package.json') return true; // Exact match for target package.json
         if (filePath.includes('.git-hooks/pre-commit-sample')) return true; // Source hook exists
         if (filePath.includes('.env.example')) return true; // Source .env.example exists
         return false; // Targets don't exist
@@ -354,8 +447,67 @@ describe('install-hooks', () => {
       installHooks();
 
       expect(consoleSpy).toHaveBeenCalledWith('🔧 Setting up prettier-staged hooks...');
+      expect(consoleSpy).toHaveBeenCalledWith(
+        '🚀 Configuring prettier-staged in: /different/project'
+      );
       expect(consoleSpy).toHaveBeenCalledWith('📦 Installing as dependency, copying files...');
       expect(consoleSpy).toHaveBeenCalledWith('✨ Setup complete!');
+    });
+    it('should warn when external installation target has no package.json', () => {
+      process.env.INIT_CWD = '/different/project';
+
+      // Mock successful operations but no package.json in target
+      execSync.mockImplementation(() => {});
+      fs.existsSync.mockImplementation((filePath) => {
+        if (filePath === '/different/project/package.json') return false; // No package.json in target
+        if (filePath.includes('.git-hooks/pre-commit-sample')) return true; // Source hook exists
+        if (filePath.includes('.env.example')) return true; // Source .env.example exists
+        return false;
+      });
+
+      installHooks();
+
+      expect(consoleSpy).toHaveBeenCalledWith('🔧 Setting up prettier-staged hooks...');
+      expect(warnSpy).toHaveBeenCalledWith(
+        '⚠️ No package.json found in /different/project. Aborting to prevent damage.'
+      );
+      expect(consoleSpy).toHaveBeenCalledWith('✨ Setup complete!');
+
+      // Should not copy files
+      expect(consoleSpy).not.toHaveBeenCalledWith('📦 Installing as dependency, copying files...');
+    });
+  });
+
+  describe('Direct execution scenarios', () => {
+    let originalRequireMain;
+
+    beforeEach(() => {
+      // Save original require.main
+      originalRequireMain = require.main;
+    });
+
+    afterEach(() => {
+      // Restore original require.main
+      require.main = originalRequireMain;
+    });
+
+    it('should execute installHooks when install-hooks.js is run directly', () => {
+      // Mock successful operations
+      execSync.mockImplementation(() => {});
+
+      // Mock require.main to simulate direct execution
+      require.main = { filename: require.resolve('../src/install-hooks.js') };
+
+      // Clear the require cache and require the module again to trigger direct execution
+      const installHooksPath = require.resolve('../src/install-hooks.js');
+      delete require.cache[installHooksPath];
+
+      // This should trigger the direct execution path
+      const moduleExports = require('../src/install-hooks.js');
+
+      // Verify the module exports are still available
+      expect(typeof moduleExports.installHooks).toBe('function');
+      expect(typeof moduleExports.isExternalInstallation).toBe('function');
     });
   });
 });

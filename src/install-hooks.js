@@ -50,17 +50,37 @@ function isExternalInstallation() {
   const initCwd = process.env.INIT_CWD;
   const currentCwd = process.cwd();
 
-  // If INIT_CWD is different from current working directory,
-  // we're being installed as a dependency
-  return !!(initCwd && initCwd !== currentCwd);
+  // 1. Both paths exist and are different: likely an external installation
+  if (initCwd && initCwd !== currentCwd) {
+    return true;
+  }
+
+  // 2. Rebuild/Link case: paths are the same,
+  // but we check if we are inside node_modules
+  if (currentCwd.includes('node_modules')) {
+    return true;
+  }
+
+  // 3. If none of the above, it's real local development
+  return false;
 }
 
 /**
  * Gets the target project directory (where the package is being installed)
  */
 function getTargetProjectDir() {
-  // INIT_CWD contains the directory where npm install was run
-  return process.env.INIT_CWD || process.cwd();
+  let targetDir;
+  const currentCwd = process.cwd();
+
+  if (currentCwd.includes('node_modules')) {
+    // If we are in node_modules/@iamandersonp/prettier-staged
+    // Go up 3 levels to reach the user's root
+    targetDir = path.resolve(currentCwd, '..', '..', '..');
+  } else {
+    // If for some reason INIT_CWD was different and valid
+    targetDir = process.env.INIT_CWD;
+  }
+  return targetDir || process.cwd();
 }
 
 /**
@@ -173,9 +193,15 @@ function installHooks() {
 
   // Only copy to target project if this is an external installation
   if (isExternalInstallation()) {
-    console.log('📦 Installing as dependency, copying files...');
-    copyPreCommitHook();
-    copyEnvExample();
+    const targetProjectDir = getTargetProjectDir();
+    if (fs.existsSync(path.join(targetProjectDir, 'package.json'))) {
+      console.log(`🚀 Configuring prettier-staged in: ${targetProjectDir}`);
+      console.log('📦 Installing as dependency, copying files...');
+      copyPreCommitHook();
+      copyEnvExample();
+    } else {
+      console.warn(`⚠️ No package.json found in ${targetProjectDir}. Aborting to prevent damage.`);
+    }
   } else {
     console.log('🏠 Running in development mode, skipping file copies');
   }

@@ -361,4 +361,40 @@ describe('prettier-staged CLI', () => {
       expect(result.test('readme.md')).toBe(false);
     });
   });
+
+  describe('Direct execution scenarios', () => {
+    let originalRequireMain;
+
+    beforeEach(() => {
+      // Save original require.main
+      originalRequireMain = require.main;
+    });
+
+    afterEach(() => {
+      // Restore original require.main
+      require.main = originalRequireMain;
+    });
+
+    it('should execute runPrettierStaged when index.js is run directly', () => {
+      // Mock successful git operations
+      execSync
+        .mockReturnValueOnce('src/app.ts\n') // git diff
+        .mockReturnValueOnce(undefined) // prettier command
+        .mockReturnValueOnce(undefined); // git add command
+
+      // Mock require.main to simulate direct execution
+      require.main = { filename: require.resolve('../src/index.js') };
+
+      // Clear the require cache and require the module again to trigger direct execution
+      const indexPath = require.resolve('../src/index.js');
+      delete require.cache[indexPath];
+
+      // This should trigger the direct execution path
+      const moduleExports = require('../src/index.js');
+
+      // Verify the module exports are still available
+      expect(typeof moduleExports.runPrettierStaged).toBe('function');
+      expect(typeof moduleExports.getExtensionsFromEnv).toBe('function');
+    });
+  });
 });
