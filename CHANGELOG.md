@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/iamandersonp/prettier-staged.git/compare/v0.3.1...v0.4.0) (2026-04-07)
+
+### Features
+
+- :sparkles: copy .env.example file ([645d873](https://github.com/iamandersonp/prettier-staged.git/commits/645d873068b79627a132fb9faf6da0f6c8a8ac7e))
+
 ### [0.3.1](https://github.com/iamandersonp/prettier-staged.git/compare/v0.3.0...v0.3.1) (2026-04-07)
 
 ### Bug Fixes
