@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/iamandersonp/prettier-staged.git/compare/v0.4.0...v0.4.1) (2026-04-07)
+
+### Bug Fixes
+
+- :bug: install process detects corectly the path ([90d7bbd](https://github.com/iamandersonp/prettier-staged.git/commits/90d7bbd0fc0a2e67b12ba61a5c8ec86d8554a901))
+
 ## [0.4.0](https://github.com/iamandersonp/prettier-staged.git/compare/v0.3.1...v0.4.0) (2026-04-07)
 
 ### Features
