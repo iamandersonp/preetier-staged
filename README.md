@@ -1,4 +1,4 @@
-# prettier-staged
+# @iamandersonp/prettier-staged
 
 An utitlty to auto format stagged files using prettier
 
@@ -7,13 +7,13 @@ An utitlty to auto format stagged files using prettier
 To use as a dev dependency
 
 ```bash
-npm i -D prettier-staged
+npm i -D @iamandersonp/prettier-staged
 ```
 
 To use as a global
 
 ```bash
-npm i -g prettier-staged
+npm i -g @iamandersonp/prettier-staged
 ```
 
 ## Setup
@@ -129,7 +129,7 @@ fi
 1. **Install the package**:
 
    ```bash
-   npm install -D prettier-staged
+   npm install -D @iamandersonp/prettier-staged
    ```
 
 2. **Optional: Configure hooks directory**:
