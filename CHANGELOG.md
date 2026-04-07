@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/iamandersonp/prettier-staged.git/compare/v0.2.0...v0.3.0) (2026-04-07)
+
+
+### Features
+
+* :sparkles: configurable extensions ([55ff5cb](https://github.com/iamandersonp/prettier-staged.git/commits/55ff5cb0c3276591e209979207610c4b48b04b62))
+
 ## [0.2.0](https://github.com/iamandersonp/preetier-staged/compare/v0.1.1...v0.2.0) (2026-04-07)
 
 ### Bug Fixes
