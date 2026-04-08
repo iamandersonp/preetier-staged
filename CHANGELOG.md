@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/iamandersonp/prettier-staged.git/compare/v0.5.0...v0.6.0) (2026-04-08)
+
+
+### Features
+
+* :sparkles: ensure .env file contains required configurations ([462947f](https://github.com/iamandersonp/prettier-staged.git/commits/462947fa2d05e66671f83adaadbe8dfd3af46c03))
+
+
+### Bug Fixes
+
+* :zap: check if in a git repository to prevent execution interrupts ([dc8ff9e](https://github.com/iamandersonp/prettier-staged.git/commits/dc8ff9e9ee09a1e753f567463700d396182d78d3))
+
 ## [0.5.0](https://github.com/iamandersonp/prettier-staged.git/compare/v0.4.1...v0.5.0) (2026-04-07)
 
 ### Features
