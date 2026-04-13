@@ -2,18 +2,52 @@
 
 Configurable utility to auto-format staged files using Prettier with customizable file extensions and hooks directory
 
+## Requirements
+
+This package requires **Prettier** as a peer dependency. Make sure you have Prettier installed in your project before using prettier-staged.
+
+**Supported Prettier versions:** `>=2.0.0`
+
+If you don't have Prettier installed, you'll need to install it first:
+
+```bash
+# For development dependency (recommended)
+npm i -D prettier
+
+# Or globally
+npm i -g prettier
+```
+
 ## Installation
 
 To use as a dev dependency
 
 ```bash
+# Install prettier if you don't have it
+npm i -D prettier
+
+# Then install prettier-staged
 npm i -D @iamandersonp/prettier-staged
 ```
 
 To use as a global
 
 ```bash
+# Install prettier globally if you don't have it
+npm i -g prettier
+
+# Then install prettier-staged globally
 npm i -g @iamandersonp/prettier-staged
+```
+
+**One-line installation (recommended):**
+
+```bash
+# Development dependencies
+npm i -D prettier @iamandersonp/prettier-staged
+
+# Global installation
+npm i -g prettier @iamandersonp/prettier-staged
 ```
 
 ## Setup
