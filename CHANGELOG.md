@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 and [Conventional Commits](https://www.conventionalcommits.org/).
 
+## [0.6.1](https://github.com/iamandersonp/prettier-staged/compare/prettier-staged-v0.6.0...prettier-staged-v0.6.1) (2026-04-13)
+
+### Features
+
+* :sparkles: add prttier as a peer dependency ([e99d89e](https://github.com/iamandersonp/prettier-staged/commit/e99d89ebaf814f00b26c77756e3e89da182ede1e))
+
 ## [0.6.0](https://github.com/iamandersonp/prettier-staged.git/compare/v0.5.0...v0.6.0) (2026-04-08)
 
 ### Features
