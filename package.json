@@ -32,10 +32,11 @@
   "license": "GPL-3.0-only",
   "description": "Configurable utility to auto-format staged files using Prettier with customizable file extensions and hooks directory",
   "readme": "README.md",
-  "dependencies": {
-    "prettier": "^3.8.1"
+  "peerDependencies": {
+    "prettier": ">=2.0.0"
   },
   "devDependencies": {
+    "prettier": "^3.8.1",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "jest": "^30.3.0"
